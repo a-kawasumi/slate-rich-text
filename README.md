@@ -1,7 +1,8 @@
-# Next.js + TypeScript + Redux Template
+# slate-rich-text
 
-- localStorage と Redux の状態を同期させることでデータの永続化が可能にしています
-- Redux については [docs/redux.md](/docs/redux.md) を確認してください
+- Slate の概要については [docs/slate.md](/docs/slate.md) を確認してください
+
+using [Next.js + TypeScript + Redux Template](https://github.com/a-kawasumi/next-ts-redux-template)
 
 ### Packages
 
@@ -10,6 +11,7 @@
 - [Redux Toolkit](https://redux-toolkit.js.org/) v1.8.0
 - jest v27.5.1
 - husky v>=6
+- [slate](https://docs.slatejs.org/)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
