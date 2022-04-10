@@ -19,6 +19,9 @@ const deserialize = (string: string) =>
     children: [{ text: line }],
   }));
 
+/**
+ * localStorageに{ content: text }を保存することで永続化ができる
+ */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type StorageEditorProps = {};
 export const StorageEditor: React.FC<StorageEditorProps> = () => {

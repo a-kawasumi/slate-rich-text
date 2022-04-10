@@ -20,6 +20,7 @@ type CustomEditorType = {
   bold: boolean | null;
 } & BaseEditor &
   ReactEditor;
+
 declare module 'slate' {
   interface CustomTypes {
     Editor: CustomEditorType;
