@@ -100,7 +100,7 @@ const Leaf = (props: RenderLeafProps) => {
   );
 };
 
-export const SlateEditor = () => {
+export const BasicEditor = () => {
   const editor = useMemo(() => withReact(createEditor()), []);
 
   // Define a rendering function based on the element passed to `props`. We use
