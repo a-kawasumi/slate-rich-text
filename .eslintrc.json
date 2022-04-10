@@ -13,10 +13,7 @@
     // v17以降はimport react from reactが不要
     "react/react-in-jsx-scope": "off",
     // tsxを有効にする
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".tsx", "tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".tsx", "tsx"] }],
     "react/jsx-props-no-spreading": "off",
     "react/function-component-definition": [
       "off",
@@ -32,6 +29,8 @@
     // dependenciesのlint無効
     "import/no-extraneous-dependencies": "off",
     // next/linkを使うのでaタグのvalidは無効
-    "jsx-a11y/anchor-is-valid": "off"
+    "jsx-a11y/anchor-is-valid": "off",
+    // ts-expect-errorを許可する
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }

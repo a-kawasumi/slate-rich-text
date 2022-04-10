@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '~/styles/Home.module.css';
-import { Editor } from '~/components/ui/Editor';
+import { SlateEditor } from '~/components/ui/Editor';
 
 const Home: NextPage = () => (
   <div className={styles.container}>
@@ -13,7 +13,7 @@ const Home: NextPage = () => (
     </Head>
 
     <main className={styles.main}>
-      <Editor />
+      <SlateEditor />
     </main>
 
     <footer className={styles.footer}>
