@@ -1,8 +1,19 @@
 import type { NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '~/styles/Home.module.css';
 import { BasicEditor } from '~/components/ui/Editor/BasicEditor';
+import { StorageEditorProps } from '~/components/ui/Editor/StorageEditor';
+
+// SSR回避
+const StorageEditor = dynamic<StorageEditorProps>(
+  () => import('../components/ui/Editor/StorageEditor').then(mod => mod.StorageEditor),
+  {
+    loading: () => <div>loading...</div>,
+    ssr: false,
+  },
+);
 
 const Home: NextPage = () => (
   <div className={styles.container}>
@@ -13,7 +24,11 @@ const Home: NextPage = () => (
     </Head>
 
     <main className={styles.main}>
+      <h2>Basic Editor</h2>
       <BasicEditor />
+
+      <h2>Storage Editor</h2>
+      <StorageEditor />
     </main>
 
     <footer className={styles.footer}>
