@@ -6,21 +6,23 @@ import { ReactEditor, Slate, Editable, withReact, RenderElementProps, RenderLeaf
 
 interface CustomText {
   text: string;
-  bold?: boolean;
-  type?: string;
+  bold: boolean | null;
+  type: string | null;
 }
 interface CustomElement {
   type: string;
+  bold: boolean | null;
   children: CustomText[];
 }
 
-type CustomEditor = {
-  type: string;
+type CustomEditorType = {
+  type: string | null;
+  bold: boolean | null;
 } & BaseEditor &
   ReactEditor;
 declare module 'slate' {
   interface CustomTypes {
-    Editor: CustomEditor;
+    Editor: CustomEditorType;
     Element: CustomElement;
     Text: CustomText;
   }
@@ -30,9 +32,48 @@ declare module 'slate' {
 const initialValue = [
   {
     type: 'paragraph',
-    children: [{ text: 'A line of text in a paragraph.' }],
+    children: [{ text: 'A line of text in a paragraph.', type: null, bold: false }],
+    bold: null,
   },
 ];
+
+// Define our own custom set of helpers.
+const CustomEditor = {
+  isBoldMarkActive(editor: CustomEditorType) {
+    const [match] = Editor.nodes(editor, {
+      match: n => n.bold === true,
+      universal: true,
+    });
+
+    return !!match;
+  },
+
+  isCodeBlockActive(editor: CustomEditorType) {
+    const [match] = Editor.nodes(editor, {
+      match: n => n.type === 'code',
+    });
+
+    return !!match;
+  },
+
+  toggleBoldMark(editor: CustomEditorType) {
+    const isActive = CustomEditor.isBoldMarkActive(editor);
+    Transforms.setNodes<CustomEditorType>(
+      editor,
+      { bold: isActive ? null : true },
+      { match: n => Text.isText(n), split: true },
+    );
+  },
+
+  toggleCodeBlock(editor: CustomEditorType) {
+    const isActive = CustomEditor.isCodeBlockActive(editor);
+    Transforms.setNodes<CustomEditorType>(
+      editor,
+      { type: isActive ? null : 'code' },
+      { match: n => Editor.isBlock(editor, n) },
+    );
+  },
+};
 
 // Define a React component renderer for our code blocks.
 const CodeElement = (props: RenderElementProps) => {
@@ -77,6 +118,26 @@ export const SlateEditor = () => {
 
   return (
     <Slate editor={editor} value={initialValue}>
+      <div>
+        <button
+          type="button"
+          onMouseDown={event => {
+            event.preventDefault();
+            CustomEditor.toggleBoldMark(editor);
+          }}
+        >
+          Bold
+        </button>
+        <button
+          type="button"
+          onMouseDown={event => {
+            event.preventDefault();
+            CustomEditor.toggleCodeBlock(editor);
+          }}
+        >
+          Code Block
+        </button>
+      </div>
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
@@ -89,28 +150,14 @@ export const SlateEditor = () => {
             // When "`" is pressed, keep our existing code block logic.
             case '`': {
               event.preventDefault();
-              // @ts-expect-error
-              const [match] = Editor.nodes<CustomEditor>(editor, {
-                match: n => n.type === 'code',
-              });
-              Transforms.setNodes(
-                editor,
-                { type: match ? 'paragraph' : 'code' },
-                { match: n => Editor.isBlock(editor, n) },
-              );
+              CustomEditor.toggleCodeBlock(editor);
               break;
             }
 
             // When "B" is pressed, bold the text in the selection.
             case 'b': {
               event.preventDefault();
-              Transforms.setNodes(
-                editor,
-                { bold: true },
-                // Apply it to text nodes, and split the text node up if the
-                // selection is overlapping only part of it.
-                { match: n => Text.isText(n), split: true },
-              );
+              CustomEditor.toggleBoldMark(editor);
               break;
             }
 
